@@ -19,6 +19,10 @@
             <img alt="nose" src="./assets/nose.png" style="z-index: 3" />
           </template>
         </div>
+        <div class="action">
+          <button>Random</button>
+          <button @click="onDownload()">Download</button>
+        </div>
       </div>
       <div class="accessorize">
         <div class="categories">
@@ -58,6 +62,8 @@
 
 <script setup>
 import { ref } from "vue";
+import html2canvas from "html2canvas";
+
 var selectedCategory = ref(0);
 var selectedSpec = ref(0);
 var dict = ref([
@@ -147,6 +153,19 @@ function onSpecClick(value) {
   this.selectedSpec = value;
   this.dict[this.selectedCategory].value = value;
 }
+function onDownload() {
+  // seek the element(.canvas) and read it as Canvas
+  html2canvas(document.querySelector(".canvas")).then(function (canvas) {
+    // create a <a> tag
+    var a = document.createElement("a");
+    // convert the Canvas content to base64
+    a.href = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    a.download = "alpaca.png";
+    a.click();
+  });
+}
 </script>
 
 <style lang="scss">
@@ -172,10 +191,12 @@ header {
   gap: 50px;
 }
 .result {
-  height: 700px;
+  height: 1000px;
   width: 700px;
   .canvas {
     position: relative;
+    height: 700px;
+    width: 700px;
     img {
       position: absolute;
       height: 700px;
@@ -184,38 +205,64 @@ header {
     }
   }
 }
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 20px;
+  button {
+    flex: 1;
+    --primary-color: #000;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-radius: 5px;
+    color: var(--primary-color);
+    background-color: #fff;
+    padding: 1em 2em;
+    display: flex;
+    transition: 0.2s;
+    align-items: center;
+    font-weight: bold;
+    line-height: 50px;
+  }
+  button:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+  }
+}
 .accessorize {
   height: 700px;
   width: 700px;
-
   .options {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
     margin: 30px 0px;
   }
-}
-button {
-  --primary-color: #000;
-  box-sizing: border-box;
-  border: 1px solid;
-  border-radius: 50px;
-  color: var(--primary-color);
-  background-color: #fff;
-  padding: 1em 1.8em;
-  display: flex;
-  transition: 0.2s;
-  align-items: center;
-  gap: 0.6em;
-  font-weight: bold;
-}
-.select {
-  background-color: var(--primary-color);
-  color: #fff;
-}
-button:hover {
-  background-color: var(--primary-color);
-  color: #fff;
-  cursor: pointer;
+  button {
+    --primary-color: #783434;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-radius: 50px;
+    color: var(--primary-color);
+    background-color: #fff;
+    padding: 1em 1.8em;
+    display: flex;
+    transition: 0.2s;
+    align-items: center;
+    gap: 0.6em;
+    font-weight: bold;
+  }
+  button:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+  }
+  .select {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 }
 </style>
