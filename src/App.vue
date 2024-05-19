@@ -1,26 +1,221 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <header>
+    <h1>Alpaca Image Generator</h1>
+  </header>
+  <body>
+    <div class="container">
+      <div class="result">
+        <div class="canvas">
+          <template v-for="x in dict" :key="x.category">
+            <img
+              :alt="x.category"
+              :src="
+                require(`./assets/${x.category.toLowerCase()}/${x.spec[
+                  x.value
+                ].toLowerCase()}.png`)
+              "
+              :style="{ zIndex: x.priority }"
+            />
+            <img alt="nose" src="./assets/nose.png" style="z-index: 3" />
+          </template>
+        </div>
+      </div>
+      <div class="accessorize">
+        <div class="categories">
+          <h2>Accessorize your Alpaca</h2>
+          <div class="options">
+            <template v-for="(x, index) in dict" :key="x.category">
+              <button
+                @click="onCategoryClick(index)"
+                :class="{ select: index === selectedCategory }"
+              >
+                {{ x.category }}
+              </button>
+            </template>
+          </div>
+          <hr />
+        </div>
+        <div class="specs">
+          <h2>{{ dict[selectedCategory].category }}</h2>
+          <div class="options">
+            <template
+              v-for="(x, index) in dict[selectedCategory].spec"
+              :key="x"
+            >
+              <button
+                @click="onSpecClick(index)"
+                :class="{ select: index === selectedSpec }"
+              >
+                {{ x }}
+              </button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </template>
 
-<script>
-import HelloWorld from "./components/HelloWorld.vue";
-
-export default {
-  name: "App",
-  components: {
-    HelloWorld,
+<script setup>
+import { ref } from "vue";
+var selectedCategory = ref(0);
+var selectedSpec = ref(0);
+var dict = ref([
+  {
+    category: "Hair",
+    spec: ["Default", "Bang", "Curls", "Elegant", "Quiff", "Short"],
+    value: 0,
+    priority: 3,
   },
-};
+  {
+    category: "Ears",
+    spec: ["Default", "Tilt-backward", "Tilt-forward"],
+    value: 0,
+    priority: 2,
+  },
+  {
+    category: "Accessories",
+    spec: ["Earings", "Glasses", "Flower", "Headphone"],
+    value: 0,
+    priority: 6,
+  },
+  {
+    category: "Backgrounds",
+    spec: [
+      "Blue50",
+      "Blue60",
+      "Blue70",
+      "Darkblue30",
+      "Darkblue50",
+      "Darkblue70",
+      "Green50",
+      "Green60",
+      "Green70",
+      "Grey40",
+      "Grey70",
+      "Grey80",
+      "Red50",
+      "Red60",
+      "Red70",
+      "Yellow50",
+      "Yellow60",
+      "Yellow70",
+    ],
+    value: 0,
+    priority: 0,
+  },
+  {
+    category: "Eyes",
+    spec: ["Default", "Angry", "Naughty", "Panda", "Smart", "Star"],
+    value: 0,
+    priority: 4,
+  },
+  {
+    category: "Leg",
+    spec: [
+      "Default",
+      "Bubble-tea",
+      "Cookie",
+      "Game-console",
+      "Tilt-backward",
+      "Tilt-forward",
+    ],
+    value: 0,
+    priority: 5,
+  },
+  {
+    category: "Mouth",
+    spec: ["Default", "Eating", "Laugh", "Tongue", "Astonished"],
+    value: 0,
+    priority: 6,
+  },
+  {
+    category: "Neck",
+    spec: ["Default", "Bend-backward", "Bend-forward", "Thick"],
+    value: 0,
+    priority: 1,
+  },
+]);
+
+function onCategoryClick(value) {
+  if (this.selectedCategory !== value) {
+    this.selectedCategory = value;
+    this.selectedSpec = this.dict[this.selectedCategory].value;
+  }
+}
+function onSpecClick(value) {
+  this.selectedSpec = value;
+  this.dict[this.selectedCategory].value = value;
+}
 </script>
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Alfa Slab One", cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+header {
+  text-align: center;
+  h1 {
+    font-size: 3rem;
+  }
+}
+.container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+.result {
+  height: 700px;
+  width: 700px;
+  .canvas {
+    position: relative;
+    img {
+      position: absolute;
+      height: 700px;
+      width: 700px;
+      object-fit: contain;
+    }
+  }
+}
+.accessorize {
+  height: 700px;
+  width: 700px;
+
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 30px 0px;
+  }
+}
+button {
+  --primary-color: #000;
+  box-sizing: border-box;
+  border: 1px solid;
+  border-radius: 50px;
+  color: var(--primary-color);
+  background-color: #fff;
+  padding: 1em 1.8em;
+  display: flex;
+  transition: 0.2s;
+  align-items: center;
+  gap: 0.6em;
+  font-weight: bold;
+}
+.select {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+button:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
 }
 </style>
