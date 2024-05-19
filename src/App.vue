@@ -16,11 +16,11 @@
               "
               :style="{ zIndex: x.priority }"
             />
-            <img alt="nose" src="./assets/nose.png" style="z-index: 3" />
           </template>
+          <img alt="Nose" src="./assets/nose.png" style="z-index: 3" />
         </div>
         <div class="action">
-          <button>Random</button>
+          <button @click="onRandom()">Random</button>
           <button @click="onDownload()">Download</button>
         </div>
       </div>
@@ -71,13 +71,13 @@ var dict = ref([
     category: "Hair",
     spec: ["Default", "Bang", "Curls", "Elegant", "Quiff", "Short"],
     value: 0,
-    priority: 3,
+    priority: 4,
   },
   {
     category: "Ears",
     spec: ["Default", "Tilt-backward", "Tilt-forward"],
     value: 0,
-    priority: 2,
+    priority: 1,
   },
   {
     category: "Accessories",
@@ -114,7 +114,7 @@ var dict = ref([
     category: "Eyes",
     spec: ["Default", "Angry", "Naughty", "Panda", "Smart", "Star"],
     value: 0,
-    priority: 4,
+    priority: 5,
   },
   {
     category: "Leg",
@@ -139,7 +139,7 @@ var dict = ref([
     category: "Neck",
     spec: ["Default", "Bend-backward", "Bend-forward", "Thick"],
     value: 0,
-    priority: 1,
+    priority: 2,
   },
 ]);
 
@@ -166,6 +166,13 @@ function onDownload() {
     a.click();
   });
 }
+function onRandom() {
+  this.dict.forEach((i, index) => {
+    const randomValue = Math.floor(Math.random() * i.spec.length);
+    i.value = randomValue;
+    if (this.selectedCategory === index) this.selectedSpec = randomValue;
+  });
+}
 </script>
 
 <style lang="scss">
@@ -189,9 +196,10 @@ header {
   justify-content: center;
   flex-wrap: wrap;
   gap: 50px;
+  margin-top: 100px;
 }
 .result {
-  height: 1000px;
+  height: 800px;
   width: 700px;
   .canvas {
     position: relative;
@@ -213,12 +221,13 @@ header {
   gap: 20px;
   button {
     flex: 1;
-    --primary-color: #000;
+    --primary-color: #fff;
+    --second-color: #783434;
     box-sizing: border-box;
     border: 1px solid;
     border-radius: 5px;
     color: var(--primary-color);
-    background-color: #fff;
+    background-color: var(--second-color);
     padding: 1em 2em;
     display: flex;
     transition: 0.2s;
@@ -228,7 +237,7 @@ header {
   }
   button:hover {
     background-color: var(--primary-color);
-    color: #fff;
+    color: var(--second-color);
     cursor: pointer;
   }
 }
@@ -243,11 +252,12 @@ header {
   }
   button {
     --primary-color: #783434;
+    --second-color: #fff;
     box-sizing: border-box;
     border: 1px solid;
     border-radius: 50px;
     color: var(--primary-color);
-    background-color: #fff;
+    background-color: var(--second-color);
     padding: 1em 1.8em;
     display: flex;
     transition: 0.2s;
@@ -257,12 +267,12 @@ header {
   }
   button:hover {
     background-color: var(--primary-color);
-    color: #fff;
+    color: var(--second-color);
     cursor: pointer;
   }
   .select {
     background-color: var(--primary-color);
-    color: #fff;
+    color: var(--second-color);
   }
 }
 </style>
