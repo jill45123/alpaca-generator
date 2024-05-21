@@ -6,12 +6,12 @@
     <div class="container">
       <div class="result">
         <div class="canvas">
-          <template v-for="x in dict" :key="x.category">
+          <template v-for="x in list" :key="x.category">
             <img
               :alt="x.category"
               :src="
                 require(`./assets/${x.category.toLowerCase()}/${x.spec[
-                  x.value
+                  x.selected
                 ].toLowerCase()}.png`)
               "
               :style="{ zIndex: x.priority }"
@@ -25,36 +25,19 @@
         </div>
       </div>
       <div class="accessorize">
-        <div class="categories">
-          <h2>Accessorize your Alpaca</h2>
-          <div class="options">
-            <template v-for="(x, index) in dict" :key="x.category">
-              <button
-                @click="onCategoryClick(index)"
-                :class="{ select: index === selectedCategory }"
-              >
-                {{ x.category }}
-              </button>
-            </template>
-          </div>
-          <hr />
-        </div>
-        <div class="specs">
-          <h2>{{ dict[selectedCategory].category }}</h2>
-          <div class="options">
-            <template
-              v-for="(x, index) in dict[selectedCategory].spec"
-              :key="x"
-            >
-              <button
-                @click="onSpecClick(index)"
-                :class="{ select: index === selectedSpec }"
-              >
-                {{ x }}
-              </button>
-            </template>
-          </div>
-        </div>
+        <OptionButton
+          title="Accessorize your Alpaca"
+          :options="list"
+          :selected="selected_category"
+          :onClick="onCategoryClick"
+        />
+        <hr />
+        <OptionButton
+          :title="list[selected_category].category"
+          :options="list[selected_category].spec"
+          :selected="selected_spec"
+          :onClick="onSpecClick"
+        />
       </div>
     </div>
   </body>
@@ -62,27 +45,28 @@
 
 <script setup>
 import { ref } from "vue";
+import OptionButton from "./components/OptionButton.vue";
 import html2canvas from "html2canvas";
 
-var selectedCategory = ref(0);
-var selectedSpec = ref(0);
-var dict = ref([
+var selected_category = ref(0);
+var selected_spec = ref(0);
+var list = ref([
   {
     category: "Hair",
     spec: ["Default", "Bang", "Curls", "Elegant", "Quiff", "Short"],
-    value: 0,
+    selected: 0,
     priority: 4,
   },
   {
     category: "Ears",
     spec: ["Default", "Tilt-backward", "Tilt-forward"],
-    value: 0,
+    selected: 0,
     priority: 1,
   },
   {
     category: "Accessories",
     spec: ["Earings", "Glasses", "Flower", "Headphone"],
-    value: 0,
+    selected: 0,
     priority: 6,
   },
   {
@@ -107,13 +91,13 @@ var dict = ref([
       "Yellow60",
       "Yellow70",
     ],
-    value: 0,
+    selected: 0,
     priority: 0,
   },
   {
     category: "Eyes",
     spec: ["Default", "Angry", "Naughty", "Panda", "Smart", "Star"],
-    value: 0,
+    selected: 0,
     priority: 5,
   },
   {
@@ -126,32 +110,32 @@ var dict = ref([
       "Tilt-backward",
       "Tilt-forward",
     ],
-    value: 0,
+    selected: 0,
     priority: 5,
   },
   {
     category: "Mouth",
     spec: ["Default", "Eating", "Laugh", "Tongue", "Astonished"],
-    value: 0,
+    selected: 0,
     priority: 6,
   },
   {
     category: "Neck",
     spec: ["Default", "Bend-backward", "Bend-forward", "Thick"],
-    value: 0,
+    selected: 0,
     priority: 2,
   },
 ]);
 
-function onCategoryClick(value) {
-  if (this.selectedCategory !== value) {
-    this.selectedCategory = value;
-    this.selectedSpec = this.dict[this.selectedCategory].value;
+function onCategoryClick(option) {
+  if (selected_category.value !== option) {
+    selected_category.value = option;
+    selected_spec.value = list.value[option].selected;
   }
 }
-function onSpecClick(value) {
-  this.selectedSpec = value;
-  this.dict[this.selectedCategory].value = value;
+function onSpecClick(option) {
+  selected_spec.value = option;
+  list.value[selected_category.value].selected = option;
 }
 function onDownload() {
   // seek the element(.canvas) and read it as Canvas
@@ -167,15 +151,18 @@ function onDownload() {
   });
 }
 function onRandom() {
-  this.dict.forEach((i, index) => {
+  list.value.forEach((i, index) => {
     const randomValue = Math.floor(Math.random() * i.spec.length);
-    i.value = randomValue;
-    if (this.selectedCategory === index) this.selectedSpec = randomValue;
+    i.selected = randomValue;
+    if (selected_category.value === index) selected_spec.value = randomValue;
   });
 }
 </script>
 
 <style lang="scss">
+html {
+  background-color: #f6e9e2;
+}
 #app {
   font-family: "Alfa Slab One", cursive;
   -webkit-font-smoothing: antialiased;
@@ -225,7 +212,7 @@ header {
     --second-color: #783434;
     box-sizing: border-box;
     border: 1px solid;
-    border-radius: 5px;
+    border-radius: 50px;
     color: var(--primary-color);
     background-color: var(--second-color);
     padding: 1em 2em;
@@ -244,35 +231,5 @@ header {
 .accessorize {
   height: 700px;
   width: 700px;
-  .options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin: 30px 0px;
-  }
-  button {
-    --primary-color: #783434;
-    --second-color: #fff;
-    box-sizing: border-box;
-    border: 1px solid;
-    border-radius: 50px;
-    color: var(--primary-color);
-    background-color: var(--second-color);
-    padding: 1em 1.8em;
-    display: flex;
-    transition: 0.2s;
-    align-items: center;
-    gap: 0.6em;
-    font-weight: bold;
-  }
-  button:hover {
-    background-color: var(--primary-color);
-    color: var(--second-color);
-    cursor: pointer;
-  }
-  .select {
-    background-color: var(--primary-color);
-    color: var(--second-color);
-  }
 }
 </style>
