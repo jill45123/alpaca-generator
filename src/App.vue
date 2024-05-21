@@ -1,4 +1,9 @@
 <template>
+  <!-- font-awesome icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
   <header>
     <h1>Alpaca Image Generator</h1>
   </header>
@@ -20,8 +25,14 @@
           <img alt="Nose" src="./assets/nose.png" style="z-index: 3" />
         </div>
         <div class="action">
-          <button @click="onRandom()">Random</button>
-          <button @click="onDownload()">Download</button>
+          <button @click="onRandom()">
+            <i class="fa-solid fa-shuffle"></i>
+            <span>Random</span>
+          </button>
+          <button @click="onDownload()">
+            <i class="fa-solid fa-download"></i>
+            <span>Download</span>
+          </button>
         </div>
       </div>
       <div class="accessorize">
@@ -175,27 +186,27 @@ html {
 header {
   text-align: center;
   h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 }
 .container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 50px;
-  margin-top: 100px;
+  gap: 40px;
+  margin-top: 15px;
 }
 .result {
-  height: 800px;
-  width: 700px;
+  height: 600px;
+  width: 500px;
   .canvas {
     position: relative;
-    height: 700px;
-    width: 700px;
+    height: 500px;
+    width: 500px;
     img {
       position: absolute;
-      height: 700px;
-      width: 700px;
+      height: 500px;
+      width: 500px;
       object-fit: contain;
     }
   }
@@ -204,32 +215,30 @@ header {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 10px;
   gap: 20px;
   button {
     flex: 1;
-    --primary-color: #fff;
-    --second-color: #783434;
     box-sizing: border-box;
     border: 1px solid;
-    border-radius: 50px;
-    color: var(--primary-color);
-    background-color: var(--second-color);
-    padding: 1em 2em;
-    display: flex;
-    transition: 0.2s;
-    align-items: center;
+    border-radius: 5px;
+    color: #375057;
+    background-color: #fff;
+    padding: 12px 16px;
+    font-size: 16px;
     font-weight: bold;
-    line-height: 50px;
+    transition: 0.2s;
   }
   button:hover {
-    background-color: var(--primary-color);
-    color: var(--second-color);
+    background-color: #f5f3f3;
     cursor: pointer;
+  }
+  span {
+    margin-left: 10px;
   }
 }
 .accessorize {
-  height: 700px;
-  width: 700px;
+  height: 500px;
+  width: 500px;
 }
 </style>
